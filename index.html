@@ -66,20 +66,20 @@
                 checkFinished();
             }
 
-            function checkFinished(){
-                var fin = false;
-                $("#game").find("td").each(function(){
-                    if( $(this).hasClass("on")){
-                            fin = false;
-                            return false;
-                    } else {
-                        fin = true;
+            function checkFinished(){ //called everytime a cell is clicked
+                var fin = false; //is game finished?
+                $("#game").find("td").each(function(){ //for each "td" in the #game table, run this anonymous function
+                    if( $(this).hasClass("on")){ //if this td has the on class, then the game is not over yet
+                            fin = false; //game not finished
+                            return false; //IMPORTANT: returning false in an anonymous function passed in to .each() will break the loop.
+                    } else { //if this td does not have on class, continue checking the other td, game MAY be over
+                        fin = true; //so far, game is "finished"
                     }
                 });
 
-                if(fin){
-                    $("#gridTitle").text("Congrats! You beat the game!");
-                    $(document).off()
+                if(fin){ //if you can loop through all "td" in #game and fin is still set to true, then the game is finished
+                    $("#gridTitle").text("Congrats! You beat the game!"); //congratulate user
+                    $(document).off() //turn off event binders so user can't continue toggling lights 
                 }
 
             }
