@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">  
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="author" content="Kyle Cheng">
+    <meta name="description" content="Lights out game">  
+
+    <title>Lights Out</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous"> 
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles.css" /> 
+    </head>
+    <body>
+
+        <div class="container" style="padding-top:2.5%; padding-bottom: 2.5%; height:90%;">
+            <h1>Lights Out!</h1>
+            <div style="padding: 5%;">
+                <form onsubmit="return createGame();">
+                    <h5>Input the desired number of rows and columns in your Lights Out game</h5>
+                    <div class="row">
+                        <div class="col">
+                            <label for="rowNum" class="form-label">Number of rows:</label>
+                            <input type="number" class="form-control" id="rowNum" required value="3">
+                        </div>
+                        <div class="col">
+                            <label for="colNum" class="form-label">Number of cols:</label>
+                            <input type="number" class="form-control" id="colNum" required value="3">
+                        </div>
+                    </div>
+                    <div style="padding-top: 20px;">
+                        <input type="submit" value="Start game" class="btn btn-primary"></input>
+                    </div>
+                </form>
+
+            </div>
+            <div class="row justify-content-center" style="height:40%; padding-bottom: 10%;">
+                <h1 id="gridTitle"></h1>
+
+                <table class="table table-bordered" id="game">
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script type="text/javascript">
+            function toggleLight(nrows, ncols, i, j){
+                //handle up down left right
+                console.log(nrows + " " + ncols + " " + i + " " +j);
+                $("#c"+(i*ncols+j)).toggleClass('on');
+                if(i > 0){ //toggle down
+                    $("#c"+((i-1)*ncols+j)).toggleClass('on');
+                }
+                if(i < nrows-1){ //toggle up
+                    $("#c"+((i+1)*ncols+j)).toggleClass('on');
+                }
+                if(j > 0){ //toggle left
+                    $("#c"+(i*ncols+(j-1))).toggleClass('on');
+                }
+                if(j < ncols-1){ //toggle right
+                    $("#c"+(i*ncols+(j+1))).toggleClass('on');
+                }
+            }
+
+            function checkFinished(){
+                var fin = false;
+                $("#game").find("td").each(function(
+                    if( $(this).hasClass("on") == false){
+                            
+                    }
+                ));
+
+                return fin;
+
+            }
+
+            function createGame() {
+                var numRows = $("#rowNum").val();
+                var numCols = $("#colNum").val();
+                $.get("./setup.php", {row:numRows, col:numCols},
+                function(results){
+                    $("#game tr").remove();
+                    var gridArray = results;
+                    $(document).off()
+                    for(let i = 0; i < numRows; i++){
+                        var row = $("<tr id='"+i+"'> </tr>");
+                        for(let j = 0; j < numCols; j++){
+                            console.log((i*numCols+j)+": "+gridArray[i*numCols+j]);
+                            if(gridArray[i*numCols+j] == 1){
+                                var cell = $("<td class='cell on' id=c"+(i*numCols+j)+"> hi </td>");
+                                row.append(cell);
+                                $(document).on('click','#c'+(i*numCols+j),function(){toggleLight(numRows,numCols,i,j)});
+                                //cell.bind("click",toggleLight(numRows,numCols,i,j));
+                            } else {
+                                var cell = $("<td class='cell' id=c"+(i*numCols+j)+"> hi </td>");
+                                row.append(cell);
+                                $(document).on('click','#c'+(i*numCols+j),function(){toggleLight(numRows,numCols,i,j)});
+                                //cell.click(toggleLight(numRows,numCols,i,j));
+                            }
+                        }
+                        $("#game").append(row);
+                    }
+                    
+                }
+                
+                , "json"); //get query string
+
+                $("#gridTitle").text("Rows: " + numRows + " Cols: " + numCols);
+
+                return false;
+            }
+
+        </script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+    </body>
+
+</html>

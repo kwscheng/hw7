@@ -1,0 +1,33 @@
+td.cell {
+    width: 10%;
+    position: relative;
+    background-color: blue;
+}
+
+td:after {
+    content: '';
+    display: block;
+    margin-top: 100%;
+  }
+td .content {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: gold;
+  }
+
+td.on {
+    background-color: yellow;
+}
+
+td.cell:hover {
+    background-color: antiquewhite;
+}
+
+table#game {
+
+    width:  30%;
+    height: 20%;
+}
