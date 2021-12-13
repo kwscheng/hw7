@@ -49,7 +49,7 @@
         <script type="text/javascript">
             function toggleLight(nrows, ncols, i, j){
                 //handle up down left right
-                console.log(nrows + " " + ncols + " " + i + " " +j);
+                //console.log(nrows + " " + ncols + " " + i + " " +j);
                 $("#c"+(i*ncols+j)).toggleClass('on');
                 if(i > 0){ //toggle down
                     $("#c"+((i-1)*ncols+j)).toggleClass('on');
@@ -63,17 +63,24 @@
                 if(j < ncols-1){ //toggle right
                     $("#c"+(i*ncols+(j+1))).toggleClass('on');
                 }
+                checkFinished();
             }
 
             function checkFinished(){
                 var fin = false;
-                $("#game").find("td").each(function(
-                    if( $(this).hasClass("on") == false){
-                            
+                $("#game").find("td").each(function(){
+                    if( $(this).hasClass("on")){
+                            fin = false;
+                            return false;
+                    } else {
+                        fin = true;
                     }
-                ));
+                });
 
-                return fin;
+                if(fin){
+                    $("#gridTitle").text("Congrats! You beat the game!");
+                    $(document).off()
+                }
 
             }
 
@@ -88,7 +95,7 @@
                     for(let i = 0; i < numRows; i++){ //use let, not var in for loop or you run into weird problems regarding variable scope.
                         var row = $("<tr id='"+i+"'> </tr>");
                         for(let j = 0; j < numCols; j++){
-                            console.log((i*numCols+j)+": "+gridArray[i*numCols+j]);
+                            //console.log((i*numCols+j)+": "+gridArray[i*numCols+j]);
                             if(gridArray[i*numCols+j] == 1){
                                 var cell = $("<td class='cell on' id=c"+(i*numCols+j)+"> hi </td>");
                                 row.append(cell);
