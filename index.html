@@ -80,25 +80,27 @@
             function createGame() {
                 var numRows = $("#rowNum").val();
                 var numCols = $("#colNum").val();
-                $.get("./setup.php", {row:numRows, col:numCols},
+                $.get("./setup.php", {row:numRows, col:numCols}, //get request, calls setup.php and sets GET parameters
                 function(results){
-                    $("#game tr").remove();
+                    $("#game tr").remove(); //reset table if already created
                     var gridArray = results;
-                    $(document).off()
-                    for(let i = 0; i < numRows; i++){
+                    $(document).off() //remove all event handlers to reset table
+                    for(let i = 0; i < numRows; i++){ //use let, not var in for loop or you run into weird problems regarding variable scope.
                         var row = $("<tr id='"+i+"'> </tr>");
                         for(let j = 0; j < numCols; j++){
                             console.log((i*numCols+j)+": "+gridArray[i*numCols+j]);
                             if(gridArray[i*numCols+j] == 1){
                                 var cell = $("<td class='cell on' id=c"+(i*numCols+j)+"> hi </td>");
                                 row.append(cell);
-                                $(document).on('click','#c'+(i*numCols+j),function(){toggleLight(numRows,numCols,i,j)});
-                                //cell.bind("click",toggleLight(numRows,numCols,i,j));
+                                $(document).on('click','#c'+(i*numCols+j),function(){toggleLight(numRows,numCols,i,j)}); //put event handlers on document, not dynamic elements
+                                //cell.bind("click",toggleLight(numRows,numCols,i,j));                                  //because you can't bind handlers to elements that aren't
+                                                                                                                        // static or don't exist yet
                             } else {
                                 var cell = $("<td class='cell' id=c"+(i*numCols+j)+"> hi </td>");
                                 row.append(cell);
-                                $(document).on('click','#c'+(i*numCols+j),function(){toggleLight(numRows,numCols,i,j)});
-                                //cell.click(toggleLight(numRows,numCols,i,j));
+                                $(document).on('click','#c'+(i*numCols+j),function(){toggleLight(numRows,numCols,i,j)}); //also, id recommend always passing in anonymous function, 
+                                                                                                                            // if you wanna reuse code just make separate function and all
+                                //cell.click(toggleLight(numRows,numCols,i,j));                                         // that in the anonymous function
                             }
                         }
                         $("#game").append(row);
@@ -110,7 +112,7 @@
 
                 $("#gridTitle").text("Rows: " + numRows + " Cols: " + numCols);
 
-                return false;
+                return false; //return false so page doesn't reload on form submit
             }
 
         </script>
